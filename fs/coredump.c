@@ -70,15 +70,6 @@ char core_pattern[CORENAME_MAX_SIZE] = "core";
 unsigned int core_pipe_limit;
 static atomic_t call_count = ATOMIC_INIT(1);
 
-static int __get_dumpable(unsigned long mm_flags)
-{
-	int ret;
-
-	ret = mm_flags & MMF_DUMPABLE_MASK;
-	return (ret >= 2) ? 2 : ret;
-}
-
-
 /* The maximal length of core_pattern is also specified in sysctl.c */
 static int zap_process(struct task_struct *start, int exit_code)
 {

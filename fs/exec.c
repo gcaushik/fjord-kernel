@@ -63,10 +63,8 @@
 #include <trace/events/task.h>
 #include "internal.h"
 
-
 static LIST_HEAD(formats);
 static DEFINE_RWLOCK(binfmt_lock);
-
 
 int __register_binfmt(struct linux_binfmt * fmt, int insert)
 {
@@ -123,15 +121,13 @@ void set_dumpable(struct mm_struct *mm, int value)
 	}
 }
 
-
-static int __get_dumpable(unsigned long mm_flags)
+int __get_dumpable(unsigned long mm_flags)
 {
 	int ret;
 
 	ret = mm_flags & MMF_DUMPABLE_MASK;
 	return (ret >= 2) ? 2 : ret;
 }
-
 
 int get_dumpable(struct mm_struct *mm)
 {

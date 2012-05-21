@@ -119,3 +119,4 @@ extern int invalidate_inodes(struct super_block *, bool);
  * dcache.c
  */
 extern struct dentry *__d_alloc(struct super_block *, const struct qstr *);
+void set_dumpable(struct mm_struct *mm, int value);

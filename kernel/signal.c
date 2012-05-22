@@ -2339,7 +2339,6 @@ relock:
 		 * Anything else is fatal, maybe with a core dump.
 		 */
 		current->flags |= PF_SIGNALED;
-
 		if (sig_kernel_coredump(signr)) {
 			if (print_fatal_signals)
 				print_fatal_signal(regs, info->si_signo);
@@ -2351,9 +2350,10 @@ relock:
 			 * first and our do_group_exit call below will use
 			 * that value and ignore the one we pass it.
 			 */
+#ifdef COREDUMP
 			do_coredump(info->si_signo, info->si_signo, regs);
+#endif
 		}
-
 		/*
 		 * Death signals, no core dump.
 		 */

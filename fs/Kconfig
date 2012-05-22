@@ -271,4 +271,15 @@ endif # NETWORK_FILESYSTEMS
 source "fs/nls/Kconfig"
 source "fs/dlm/Kconfig"
 
+# Coredump functionality
+
+config COREDUMP
+	bool "Enable core dump support"
+	default y
+	help
+	  This option enables support for performing core dumps, which
+	  in short just means outputting the state of working memory
+	  at a given time (usually for debugging purposes). If you're
+	  not sure, say Y
+
 endmenu

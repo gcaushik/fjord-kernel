@@ -63,6 +63,8 @@
 #include <trace/events/task.h>
 #include "internal.h"
 
+#ifdef COREDUMP
+
 int core_uses_pid;
 char core_pattern[CORENAME_MAX_SIZE] = "core";
 unsigned int core_pipe_limit;
@@ -690,3 +692,4 @@ int dump_seek(struct file *file, loff_t off)
 	return ret;
 }
 EXPORT_SYMBOL(dump_seek);
+#endif

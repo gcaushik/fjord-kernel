@@ -39,8 +39,28 @@ static inline void debug_putstr(const char *s)
 #endif
 
 /* cmdline.c */
+/*
+#ifdef CONFIG_EARLY_PRINTK
+  #define loop
+#endif
+
+#ifdef CONFIG_X86_VERBOSE_BOOTUP
+  #define loop
+#endif
+*/
+
+#if defined(CONFIG_EARLY_PRINTK) || defined(CONFIG_X86_VERBOSE_BOOTUP)
+
 int cmdline_find_option(const char *option, char *buffer, int bufsize);
 int cmdline_find_option_bool(const char *option);
+
+#else
+static inline void cmdline_find_option(const char *option, char *buffer, int bufsize)
+{ }
+static inline void cmdline_find_option_bool(const char *option)
+{ }
+#endif
+
 
 /* early_serial_console.c */
 #ifdef CONFIG_EARLY_PRINTK

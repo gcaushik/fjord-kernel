@@ -1,5 +1,7 @@
 #include "misc.h"
 
+#if defined(CONFIG_EARLY_PRINTK) || defined(CONFIG_X86_VERBOSE_BOOTUP)
+
 static unsigned long fs;
 static inline void set_fs(unsigned long seg)
 {
@@ -19,3 +21,7 @@ int cmdline_find_option_bool(const char *option)
 {
 	return __cmdline_find_option_bool(real_mode->hdr.cmd_line_ptr, option);
 }
+
+#endif
+
+

@@ -877,7 +877,9 @@ static void update_curr_rt(struct rq *rq)
 	struct rt_rq *rt_rq = rt_rq_of_se(rt_se);
 	u64 delta_exec;
 
-	if (curr->sched_class != &rt_sched_class)
+	// since the old code requires sched_class != rt_sched_class,
+	// we make fair_sched_class acts like rt_sched_class so it should also be excluded
+	if (curr->sched_class != &rt_sched_class && curr->sched_class != &fair_sched_class)
 		return;
 
 	delta_exec = rq->clock_task - curr->se.exec_start;
@@ -2035,6 +2037,47 @@ const struct sched_class rt_sched_class = {
 
 	.prio_changed		= prio_changed_rt,
 	.switched_to		= switched_to_rt,
+};
+
+/*
+ * All the scheduling class methods:
+ */
+const struct sched_class fair_sched_class = {
+        .next                   = &idle_sched_class, // could be &fair_sched_class (from rt)
+        .enqueue_task           = enqueue_task_rt,
+        .dequeue_task           = dequeue_task_rt,
+        .yield_task             = yield_task_rt,
+        //.yield_to_task                = yield_to_task_fair,
+
+        .check_preempt_curr     = check_preempt_curr_rt, // could be check_preempt_wakeup (from fair)
+
+        .pick_next_task         = pick_next_task_rt,
+        .put_prev_task          = put_prev_task_rt,
+
+#ifdef CONFIG_SMP
+        .select_task_rq         = select_task_rq_rt,
+
+        .set_cpus_allowed       = set_cpus_allowed_rt, // added
+        .rq_online              = rq_online_rt,
+        .rq_offline             = rq_offline_rt,
+        .pre_schedule           = pre_schedule_rt, // added
+        .post_schedule          = post_schedule_rt, // added
+        .task_woken             = task_woken_rt, // added
+        .switched_from          = switched_from_rt, // was outside of SMP
+
+        //.task_waking          = task_waking_fair,
+#endif
+        //.task_fork            = task_fork_fair,
+        .set_curr_task          = set_curr_task_rt,
+        .task_tick              = task_tick_rt,
+
+        .get_rr_interval        = get_rr_interval_rt,
+
+        .prio_changed           = prio_changed_rt,
+        .switched_to            = switched_to_rt,
+#ifdef CONFIG_FAIR_GROUP_SCHED
+        //.task_move_group      = task_move_group_fair,
+#endif
 };
 
 #ifdef CONFIG_SCHED_DEBUG

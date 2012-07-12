@@ -19,7 +19,7 @@
  *  Adaptive scheduling granularity, math enhancements by Peter Zijlstra
  *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra <pzijlstr@redhat.com>
  */
-#if 0
+//#if 0
 #include <linux/latencytop.h>
 #include <linux/sched.h>
 #include <linux/cpumask.h>
@@ -820,7 +820,6 @@ account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
 static inline int throttled_hierarchy(struct cfs_rq *cfs_rq);
 # ifdef CONFIG_SMP
 static void update_cfs_rq_load_contribution(struct cfs_rq *cfs_rq,
-					    int global_update)
 {
 	struct task_group *tg = cfs_rq->tg;
 	long load_avg;
@@ -5598,7 +5597,7 @@ const struct sched_class fair_sched_class = {
 	//.task_move_group	= task_move_group_fair,
 #endif
 };
-#endif
+#endif /* to comment out fair_sched_class */
 
 #ifdef CONFIG_SCHED_DEBUG
 void print_cfs_stats(struct seq_file *m, int cpu)
@@ -5624,4 +5623,4 @@ __init void init_sched_fair_class(void)
 #endif /* SMP */
 
 }
-#endif
+//#endif /* to remove the whole fair.c  */

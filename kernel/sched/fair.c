@@ -19,7 +19,7 @@
  *  Adaptive scheduling granularity, math enhancements by Peter Zijlstra
  *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra <pzijlstr@redhat.com>
  */
-
+#if 0
 #include <linux/latencytop.h>
 #include <linux/sched.h>
 #include <linux/cpumask.h>
@@ -213,7 +213,7 @@ calc_delta_mine(unsigned long delta_exec, unsigned long weight,
 }
 
 
-const struct sched_class fair_sched_class;
+//const struct sched_class fair_sched_class;
 
 /**************************************************************
  * CFS operations on generic schedulable entities:
@@ -3716,7 +3716,6 @@ unsigned long __weak arch_scale_smt_power(struct sched_domain *sd, int cpu)
 {
 	return default_scale_smt_power(sd, cpu);
 }
-
 unsigned long scale_rt_power(int cpu)
 {
 	struct rq *rq = cpu_rq(cpu);
@@ -5557,44 +5556,49 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
 	return rr_interval;
 }
 
+#if 0
 /*
  * All the scheduling class methods:
  */
 const struct sched_class fair_sched_class = {
-	.next			= &idle_sched_class,
-	.enqueue_task		= enqueue_task_fair,
-	.dequeue_task		= dequeue_task_fair,
-	.yield_task		= yield_task_fair,
-	.yield_to_task		= yield_to_task_fair,
+	.next			= &idle_sched_class, // could be &fair_sched_class (from rt)
+	.enqueue_task		= enqueue_task_rt,
+	.dequeue_task		= dequeue_task_rt,
+	.yield_task		= yield_task_rt,
+	//.yield_to_task		= yield_to_task_fair,
 
-	.check_preempt_curr	= check_preempt_wakeup,
+	.check_preempt_curr	= check_preempt_curr_rt, // could be check_preempt_wakeup (from fair)
 
-	.pick_next_task		= pick_next_task_fair,
-	.put_prev_task		= put_prev_task_fair,
+	.pick_next_task		= pick_next_task_rt,
+	.put_prev_task		= put_prev_task_rt,
 
 #ifdef CONFIG_SMP
-	.select_task_rq		= select_task_rq_fair,
+	.select_task_rq		= select_task_rq_rt,
 
-	.rq_online		= rq_online_fair,
-	.rq_offline		= rq_offline_fair,
+	.set_cpus_allowed	= set_cpus_allowed_rt, // added
+	.rq_online		= rq_online_rt,
+	.rq_offline		= rq_offline_rt,
+	.pre_schedule		= pre_schedule_rt, // added
+	.post_schedule 		= post_schedule_rt, // added
+	.task_woken		= task_woken_rt, // added
+	.switched_from		= switched_from_rt, // was outside of SMP
 
-	.task_waking		= task_waking_fair,
+	//.task_waking		= task_waking_fair,
 #endif
 
-	.set_curr_task          = set_curr_task_fair,
-	.task_tick		= task_tick_fair,
-	.task_fork		= task_fork_fair,
+	//.task_fork		= task_fork_fair,
+	.set_curr_task          = set_curr_task_rt,
+	.task_tick		= task_tick_rt,
 
-	.prio_changed		= prio_changed_fair,
-	.switched_from		= switched_from_fair,
-	.switched_to		= switched_to_fair,
+	.get_rr_interval	= get_rr_interval_rt,
 
-	.get_rr_interval	= get_rr_interval_fair,
-
+	.prio_changed		= prio_changed_rt,
+	.switched_to		= switched_to_rt, 
 #ifdef CONFIG_FAIR_GROUP_SCHED
-	.task_move_group	= task_move_group_fair,
+	//.task_move_group	= task_move_group_fair,
 #endif
 };
+#endif
 
 #ifdef CONFIG_SCHED_DEBUG
 void print_cfs_stats(struct seq_file *m, int cpu)
@@ -5620,3 +5624,4 @@ __init void init_sched_fair_class(void)
 #endif /* SMP */
 
 }
+#endif

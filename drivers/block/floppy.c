@@ -1033,20 +1033,6 @@ static int fd_wait_for_completion(unsigned long delay, timeout_fn function)
 
 static DEFINE_SPINLOCK(floppy_hlt_lock);
 static int hlt_disabled;
-static void floppy_disable_hlt(void)
-{
-	unsigned long flags;
-
-	WARN_ONCE(1, "floppy_disable_hlt() scheduled for removal in 2012");
-	spin_lock_irqsave(&floppy_hlt_lock, flags);
-	if (!hlt_disabled) {
-		hlt_disabled = 1;
-#ifdef HAVE_DISABLE_HLT
-		disable_hlt();
-#endif
-	}
-	spin_unlock_irqrestore(&floppy_hlt_lock, flags);
-}
 
 static void floppy_enable_hlt(void)
 {
